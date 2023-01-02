@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 //Transformar em objetos de cadeira de bites
 //trabalha em redes e com arquivos
 @Entity
-@Table(name = "tb-user")
+@Table(name = "tb_user")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
