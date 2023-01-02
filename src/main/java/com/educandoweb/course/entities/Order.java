@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,10 @@ private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	
+	//padrão ISO 8601 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
 	
 	//Chave Estrangeira: Muitos para um
@@ -27,6 +33,11 @@ private static final long serialVersionUID = 1L;
 	@JoinColumn(name = "Client_id")
 	private User client;
 
+	
+	public Order() {
+		
+	}
+	
 	public Order(Long id, Instant moment, User client) {
 		this.id = id;
 		this.moment = moment;
