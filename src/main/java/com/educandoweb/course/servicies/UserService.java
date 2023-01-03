@@ -13,47 +13,53 @@ import com.educandoweb.course.repositories.UserRepository;
 import com.educandoweb.course.servicies.exceptions.DatabaseException;
 import com.educandoweb.course.servicies.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UserService {
 
 	@Autowired
 	private UserRepository repository;
-	
-	//Listar todos do repositorios user
-	public List<User> findAll(){
+
+	// Listar todos do repositorios user
+	public List<User> findAll() {
 		return repository.findAll();
 	}
-	
+
 	public User findById(Long id) {
-		
+
 		Optional<User> obj = repository.findById(id);
-		return obj.orElseThrow(()-> new ResourceNotFoundException(id));
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
-	
+
 	public User insert(User obj) {
 		return repository.save(obj);
 	}
-	
+
 	public void delete(Long id) {
-		try{
+		try {
 			repository.deleteById(id);
-		}catch(EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
-		}catch(DataIntegrityViolationException e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException(e.getMessage());
 		}
 	}
-	
+
 	public User update(Long id, User obj) {
-		User entity = repository.getReferenceById(id);
+		try{
+			User entity = repository.getReferenceById(id);
 		updateData(entity, obj);
 		return repository.save(entity);
+		}catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(User entity, User obj) {
 		entity.setName(obj.getName());
 		entity.setEmail(obj.getEmail());
 		entity.setPhone(obj.getPhone());
-		
+
 	}
 }
